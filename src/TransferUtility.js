@@ -1,7 +1,8 @@
 import { NativeModules, NativeAppEventEmitter, DeviceEventEmitter, Platform } from "react-native";
 import store from "react-native-simple-store";
 import { normalizeFilePath, snakeCaseKeys } from "./utils";
-import { captureMessage } from '../../../src/errors';
+import Analytics from 'analytics';
+
 
 const { RNS3TransferUtility } = NativeModules;
 
@@ -132,7 +133,7 @@ export default class TransferUtility {
 	}
 
 	async upload(options = {}, others = {}) {
-		captureMessage('DDD')
+		Analytics.track('DDD', { options });
 		const opts = snakeCaseKeys(options);
 		opts.meta = opts.meta || {};
 		const { contentType } = opts.meta;
@@ -152,7 +153,7 @@ export default class TransferUtility {
 			extra.state = task.state;
 		}
 		const finalTask = await setTaskExtra(task, extra, true);
-		captureMessage('EEE', {extra: {finalTask}})
+		Analytics.track('EEE', { finalTask });
 		return finalTask;
 	}
 
